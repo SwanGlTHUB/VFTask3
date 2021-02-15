@@ -5,7 +5,7 @@
             <apex:actionFunction action="{!updateLookupResult}" name="updateLookup" reRender="resultPanel">
                 <apex:param name="searchValue" assignTo="{!lookupInput}" value = ""/>
             </apex:actionFunction>
-            <input autocomplete="off" style = 'width: 100% !important; box-sizing: border-box !important;' type = 'text' name = 'lookupInput'></input>
+            <input onkeydown="return event.key != 'Enter';" autocomplete="off" style = 'width: 100% !important; box-sizing: border-box !important;' type = 'text' name = 'lookupInput'></input>
             <apex:outputPanel id="resultPanel">
                 <div name = 'lookupResult'>
                     <apex:repeat value="{!sObjectsToDisplay}" var="obj">
