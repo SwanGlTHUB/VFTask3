@@ -1,0 +1,3 @@
+<apex:page>
+    <c:VFCustomLookup searchSObjectName = 'Contact'></c:VFCustomLookup>
+</apex:page>

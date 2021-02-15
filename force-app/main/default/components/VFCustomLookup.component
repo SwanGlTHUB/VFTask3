@@ -1,0 +1,54 @@
+<apex:component controller="VFCustomLookupController">
+    <apex:attribute name = 'searchSObjectName' type = "String" assignTo="{!sObjectName}" description="sObjectName" required='true'/>
+    <div style = 'width: 150px !important;'>
+        <apex:form>
+            <apex:actionFunction action="{!updateLookupResult}" name="updateLookup" reRender="resultPanel">
+                <apex:param name="searchValue" assignTo="{!lookupInput}" value = ""/>
+            </apex:actionFunction>
+            <input autocomplete="off" style = 'width: 100% !important; box-sizing: border-box !important;' type = 'text' name = 'lookupInput'></input>
+            <apex:outputPanel id="resultPanel">
+                <div name = 'lookupResult'>
+                    <apex:repeat value="{!sObjectsToDisplay}" var="obj">
+                        <div name = "{!obj['Id']}" style = 'cursor: pointer; background-color:#F0F8FF; width: 100% !important; height: 20px !important;'>
+                            {!obj['Name']}
+                        </div>
+                    </apex:repeat>
+                </div>
+            </apex:outputPanel>   
+        </apex:form>
+    </div>
+    <script>
+        let lookupInputDOM = document.querySelector('[name=lookupInput]')
+        let lastLookupResultDOM = document.querySelector('[name=lookupResult]')
+
+        function lookupResultWaiting(){
+            let lookupResultDOM =  document.querySelector('[name=lookupResult]')
+            if(lookupResultDOM == lastLookupResultDOM){
+                setTimeout(lookupResultWaiting, 100)
+            }
+            else{
+                lastLookupResultDOM = lookupResultDOM
+                lookupResultDOM.addEventListener('click', (event) => {
+                    let selectedObjectId = event.target.getAttribute('name')
+                    lookupInputDOM.value = event.target.innerHTML
+                    updateLookup('')
+                    lookupInputDOM.dispatchEvent('lookup', { detail: selectedObjectId })
+                })
+            }
+        }
+        
+        lookupInputDOM.addEventListener('input', (event) => {
+            updateLookup(event.target.value)
+            lookupResultWaiting()
+        })
+
+        lookupInputDOM.addEventListener('focus', (event) => {
+            updateLookup(event.target.value)
+            lookupResultWaiting()
+        })
+
+        lookupInputDOM.addEventListener('blur', (event) => {
+            updateLookup('')
+        })
+    </script>
+</apex:component>
